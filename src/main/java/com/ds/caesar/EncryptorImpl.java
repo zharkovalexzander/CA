@@ -13,8 +13,10 @@ public class EncryptorImpl extends FileProcessor implements Encryptor {
     }
 
     @Override
-    public void encrypt(String inputFileName, String outputFileName) throws IOException {
+    public void encrypt(String inputFileName, String outputFileName, boolean enableStatistics)
+            throws IOException {
         Path path = Paths.get("D:/" + outputFileName + ".txt");
+        Statistics statistics = new Statistics();
         if(!Files.exists(path)) {
             Files.createFile(path);
         }
@@ -28,12 +30,19 @@ public class EncryptorImpl extends FileProcessor implements Encryptor {
             System.out.println(local.toString());
             this.localization = Localization.defineLocalisation(local.toString());
             writer.write(local.toString());
+            System.out.println("Reading text file:");
             while ((c = reader.read()) != -1) {
-                if(this.localization.isInRange(c)) {
+                if (this.localization.isInRange(c)) {
+                    if (enableStatistics) {
+                        statistics.put(FileProcessor.toLowerCase(c));
+                    }
                     writer.write(encryptChar(c));
                 } else {
                     writer.write(c);
                 }
+            }
+            if (enableStatistics) {
+                System.out.println(statistics);
             }
         } catch (Exception exe) {
             exe.printStackTrace();

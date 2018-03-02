@@ -40,6 +40,10 @@ public enum Localization {
         return this.alphabet.length;
     }
 
+    public char[] getAlphabet() {
+        return alphabet;
+    }
+
     public static Localization defineLocalisation(String loc) throws IOException {
         switch (loc.toLowerCase()) {
             case "en" :
